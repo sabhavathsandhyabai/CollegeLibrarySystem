@@ -8,7 +8,7 @@ public class Library {
     public void addBook(Book book) {
         String query = "INSERT INTO books (book_id, title, author, is_issued) VALUES (?, ?, ?, ?) "
                      + "ON DUPLICATE KEY UPDATE title=?, author=?";
-        try (Connection conn = DBConnection.getConnection();
+        try (Connection conn = DBConnect.getConnection();
              java.sql.PreparedStatement pstmt = conn.prepareStatement(query)) {
             
             pstmt.setString(1, book.getBookId());
@@ -28,7 +28,7 @@ public class Library {
     public void registerStudent(Student student) {
         String query = "INSERT INTO students (student_id, name) VALUES (?, ?) "
                      + "ON DUPLICATE KEY UPDATE name=?";
-        try (Connection conn = DBConnection.getConnection();
+        try (Connection conn = DBConnect.getConnection();
              java.sql.PreparedStatement pstmt = conn.prepareStatement(query)) {
             
             pstmt.setString(1, student.getStudentId());
@@ -44,7 +44,7 @@ public class Library {
 
     public void displayBooks() {
         String query = "SELECT * FROM books";
-        try (Connection conn = DBConnection.getConnection();
+        try (Connection conn = DBConnect.getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(query)) {
             
@@ -72,7 +72,7 @@ public class Library {
         String insertIssue = "INSERT INTO borrowed_books (student_id, book_id) VALUES (?, ?)";
         String updateBookStatus = "UPDATE books SET is_issued = TRUE WHERE book_id = ?";
 
-        try (Connection conn = DBConnection.getConnection()) {
+        try (Connection conn = DBConnect.getConnection()) {
             conn.setAutoCommit(false); // Enable manual transaction block execution
 
             try (java.sql.PreparedStatement psStu = conn.prepareStatement(checkStudent);
@@ -134,7 +134,7 @@ public class Library {
         String updateBookStatus = "UPDATE books SET is_issued = FALSE WHERE book_id = ?";
         String getTitle = "SELECT title FROM books WHERE book_id = ?";
 
-        try (Connection conn = DBConnection.getConnection()) {
+        try (Connection conn = DBConnect.getConnection()) {
             conn.setAutoCommit(false);
 
             try (java.sql.PreparedStatement psMatch = conn.prepareStatement(checkMatch);
